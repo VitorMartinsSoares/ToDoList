@@ -2,6 +2,8 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 import { TasksCollection } from './TasksCollection';
 import { useTracker } from 'meteor/react-meteor-data';
+import dayjs from 'dayjs';
+const yesterday = dayjs().subtract(0, 'day');
 
 Meteor.methods({
   'tasks.insert'(text) {
@@ -14,7 +16,7 @@ Meteor.methods({
     const user = useTracker(() => Meteor.user());
     TasksCollection.insert({
       text,
-      createdAt: new Date,
+      dataCreate: yesterday.format(),
       userId: this.userId,
       name: user.username,
       situation: 0,
@@ -35,7 +37,7 @@ Meteor.methods({
       text: nameTask,
       description: description,
       situation: situation,
-      createdAt: dataCreate,
+      dataCreate: dataCreate,
       userId: this.userId,
       name: user.username,
       pessoal: pessoal

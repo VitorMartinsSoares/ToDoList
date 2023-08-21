@@ -1,6 +1,7 @@
 import { useLocation } from 'react-router-dom';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import dayjs from 'dayjs';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,8 +12,11 @@ import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
-import { DrawerAll } from './DrawerAll';
 import Toolbar from '@mui/material/Toolbar';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { DrawerAll } from './DrawerAll';
 
 export const ShowTask = () => {
   let location = useLocation();
@@ -20,7 +24,7 @@ export const ShowTask = () => {
   const [editable, setEditable] = useState(true);
   const [userCreate, setUserCreate] = useState(task.name);
   const [situation, setSituation] = useState(task.situation);
-  const [dataCreate, setDataCreate] = useState(task.createdAt);
+  const [dataCreate, setDataCreate] = useState(dayjs(task.dataCreate));
   const [nameTask, setNameTask] = useState(task.text);
   const [description, setDescription] = useState(task.description);
   const [pessoal, setPessoal] = useState(task.pessoal);
@@ -32,7 +36,7 @@ export const ShowTask = () => {
   };
 
   const handleChange = (event) => {
-    if (situation == 0 && event.target.value == 2) {
+    if (task.situation == 0 && event.target.value == 2) {
       console.log("Não pode")
     } else {
       setSituation(event.target.value);
@@ -41,8 +45,7 @@ export const ShowTask = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-    console.log(pessoal)
-    Meteor.call('tasks.edit', task._id, nameTask, dataCreate, situation, description, pessoal);
+    Meteor.call('tasks.edit', task._id, nameTask, dataCreate.format(), situation, description, pessoal);
     navigate('/task');
   };
 
@@ -52,16 +55,16 @@ export const ShowTask = () => {
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
-      >
-      <Toolbar />
+
+        noValidate
+        autoComplete="off"
+        onSubmit={handleSubmit}>
+        <Toolbar />
         <Box
           component="form"
           sx={{
             '& .MuiTextField-root': { m: 1, width: '25ch' },
-          }}
-          noValidate
-          autoComplete="off"
-          onSubmit={handleSubmit}>
+          }}>
           <Box>
             <TextField
               required
@@ -83,32 +86,27 @@ export const ShowTask = () => {
                 id="demo-simple-select-helper"
                 value={situation}
                 onChange={handleChange}
+                disabled={editable}
                 label="Situação da Tarefa:">
                 <MenuItem value={0}>Cadastrada</MenuItem>
                 <MenuItem value={1}>Em Andamento</MenuItem>
-                <MenuItem value={2}>Concluída</MenuItem>
+                {task.situation !== 0 && <MenuItem value={2}>Concluída</MenuItem>}
               </Select>
             </FormControl>
-            <TextField
-              disabled={editable}
-              id="outlined-required"
-              label="Data"
-              defaultValue={task.createdAt}
-              onChange={e => setDataCreate(e.target.value)} />
-            {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="demo-simple-select-helper-label">Usuário que criou:</InputLabel>
-        <Select
-          labelId="demo-simple-select-helper-label"
-          id="demo-simple-select-helper"
-          value={userCreate}
-          label="Usuário que criou:">
-          {users.map(users => <MenuItem value={users._id}>
-            {users.name}</MenuItem>)}
-        </Select>
-      </FormControl> */}
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                disabled={editable}
+                defaultValue={dataCreate}
+                onChange={e => setDataCreate(e)}
+                disableFuture
+                label="Data de Criação"
+                format="DD/MM/YYYY"
+              />
+            </LocalizationProvider>
             <TextField
               required
-              disabled={editable}
+              disabled={true}
+              defaultValue={userCreate}
               id="outlined-required"
               label="Usuário que criou"
               onChange={e => setUserCreate(e.target.value)} />
@@ -121,7 +119,7 @@ export const ShowTask = () => {
               inputProps={{ 'aria-label': 'controlled' }}
             />
           </Box>
-          <Button type="submit" variant="contained" >Add Tasks</Button>
+          <Button type="submit" variant="contained" >Editar Tarefas</Button>
         </Box>
       </Box>
     </Box>

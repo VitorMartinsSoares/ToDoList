@@ -10,19 +10,32 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import dayjs from 'dayjs';
 import MenuItem from '@mui/material/MenuItem';
+import Toolbar from '@mui/material/Toolbar';
+import { useNavigate } from 'react-router-dom';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { DrawerAll } from './DrawerAll';
-import Toolbar from '@mui/material/Toolbar';
+import { PhotoCamera } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
+import { styled } from "@mui/system";
+
+const StyledLabel = styled('label')({
+    display: 'block',
+    cursor: 'pointer',
+    marginBottom: '10px',
+});
 
 const yesterday = dayjs().subtract(1, 'day');
 export const Profile = () => {
     const [editable, setEditable] = useState(true);
     const user = useTracker(() => Meteor.user());
+    const navigate = useNavigate();
     if (user.profile === undefined) {
         Meteor.users.update(user._id, {
             $set: {
+                "username": username,
+                "email.0.address": email,
                 "profile.birthdate": yesterday.format(),
                 "profile.gender": 0,
                 "profile.company": "Default",
@@ -30,13 +43,16 @@ export const Profile = () => {
             }
         });
     }
+    console.log(user);
     const [username, setUsername] = useState(user.username);
     const [email, setEmail] = useState((typeof user.email === 'undefined') ? 'exemplo@email.com' : user.email);
     const [birthDate, setBirthDate] = useState(dayjs(user.profile.birthdate));
     const [gender, setGender] = useState(user.profile.gender);
     const [company, setCompany] = useState(user.profile.company);
     const [photo, setPhoto] = useState(user.profile.photo);
-
+    if (gender == "Não Definido") {
+        setGender(0);
+    }
     if (birthDate == undefined) {
         setBirthDate[dayjs().subtract(1, 'day')];
     }
@@ -46,35 +62,73 @@ export const Profile = () => {
     }
 
     const toggleEditable = () => {
-        console.log(birthDate)
         setEditable(!editable);
     }
 
     const handleSubmit = e => {
+        e.preventDefault();
         Meteor.users.update(user._id, {
             $set: {
-                username: username,
-                email: email,
                 "profile.birthdate": birthDate.format(),
                 "profile.gender": gender,
                 "profile.company": company,
                 "profile.photo": photo,
             }
         });
+        navigate('/Home');
     }
 
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            setPhoto(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex' }}
+            noValidate
+            autoComplete="off">
             <DrawerAll />
             <Box component="main"
                 sx={{
+                    display: 'flex',
+                    flexDirection: 'column',  // organiza os filhos na vertical
+                    alignItems: 'center',     // centraliza os filhos na horizontal
+                    height: '100vh',          // usa 100% da altura da viewport
                     '& .MuiTextField-root': { m: 1, width: '25ch' },
-                }}
-                noValidate
-                autoComplete="off"
-                onSubmit={handleSubmit}>
-
+                }}>
                 <Toolbar />
+                <div >
+                    <Avatar style={{ justifyContent: 'center' }}
+                        alt="Uploaded Preview"
+                        src={photo}
+                        sx={{ width: 100, height: 100 }}
+
+                    />
+                </div>
+                <StyledLabel>
+                    <Button
+                        disabled={editable}
+                        style={{ display: "flex", justifyContent: "left" }}
+                        startIcon={<PhotoCamera />}
+                        component="span"
+                        variant="contained"
+                    >
+                        Carregar Foto
+                    </Button>
+                    <input
+                        disabled={editable}
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileChange}
+                        style={{ display: "none" }}
+                    />
+                </StyledLabel>
                 <div>
                     <TextField
                         required
@@ -121,20 +175,13 @@ export const Profile = () => {
                         label="Empresa"
                         defaultValue={company}
                         onChange={e => setCompany(e.target.value)} />
-                    <TextField
-                        required
-                        disabled={editable}
-                        id="outlined-required"
-                        label="Foto"
-                        defaultValue={photo}
-                        onChange={e => setPhoto(e.target.value)} />
+                
+                <IconButton edge="end" onClick={toggleEditable} aria-label="edit" style={{ marginRight: '8px', marginTop: '10px'}}>
+                        <EditIcon />
+                    </IconButton>
                 </div>
-
-                <IconButton edge="end" onClick={toggleEditable} aria-label="edit" style={{ marginRight: '8px', marginTop: '10px' }}>
-                    <EditIcon />
-                </IconButton>
-
-                <Button type="submit" variant="contained" >Editar Perfil</Button>
+                <Button variant="contained"
+                    onClick={handleSubmit}>Editar Perfil</Button>
             </Box>
         </Box>
     );
