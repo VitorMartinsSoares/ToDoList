@@ -33,25 +33,26 @@ Meteor.methods({
     }
 
     const user = useTracker(() => Meteor.user());
+    if(this.userId==TasksCollection.findOne(taskId).userId){
     TasksCollection.update(taskId, {
-      text: nameTask,
+      text: nameTask,      
+      userId: this.userId,
+      name: user.username,
       description: description,
       situation: situation,
       dataCreate: dataCreate,
-      userId: this.userId,
-      name: user.username,
       pessoal: pessoal
-    })
+    })}
   },
 
   'tasks.remove'(taskId) {
     check(taskId, String);
-
     if (!this.userId) {
       throw new Meteor.Error('Not authorized.');
     }
-
-    TasksCollection.remove(taskId);
+    if(this.userId==TasksCollection.findOne(taskId).userId){
+      TasksCollection.remove(taskId);
+    }
   },
 
   'tasks.setIsChecked'(taskId, isChecked) {

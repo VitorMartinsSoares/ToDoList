@@ -11,7 +11,7 @@ import { TasksCollection } from '/imports/api/TasksCollection';
 
 export const Home = () => {
   const { tasks } = useTracker(() => {
-    const subscription = Meteor.subscribe('privateTasks');
+    const subscription = Meteor.subscribe('allTasks');
     const tasks = TasksCollection.find().fetch();
     return { tasks }
   });
@@ -30,7 +30,7 @@ export const Home = () => {
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
         <Toolbar />
-        <Box sx={{ minWidth: 275 }}>
+        <Box sx={{ minWidth: 275, marginTop: '10px'  }}>
           <Card variant="outlined">
             <CardContent>
               <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>

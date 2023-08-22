@@ -37,11 +37,30 @@ Meteor.startup(() => {
   }
 });
 
-Meteor.publish('privateTasks', function () {
+Meteor.publish('privateTasks', function (checked = true, word = "", now=0, limit=0) {
+  const regex = new RegExp(word, 'i');
+  if (checked) {
+    return tasks = TasksCollection.find({
+      $or: [
+        { userId: { $ne: Meteor.userId() }, pessoal: false, text: regex },
+        { userId: Meteor.userId(), text: regex }
+      ]
+    },{skip:now,limit:limit});
+  } else {
+    return tasks = TasksCollection.find({
+      $or: [
+        { userId: { $ne: Meteor.userId() }, pessoal: false, situation: { $ne: 2 }, text: regex },
+        { userId: Meteor.userId(), situation: { $ne: 2 }, text: regex }
+      ]
+    },{skip:now*4,limit:limit});
+  }
+});
+
+Meteor.publish('allTasks', function () {
   return tasks = TasksCollection.find({
     $or: [
       { userId: { $ne: Meteor.userId() }, pessoal: false },
-      { userId: Meteor.userId() }
+      { userId: Meteor.userId()}
     ]
   });
 });

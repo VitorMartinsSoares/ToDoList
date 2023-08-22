@@ -15,29 +15,29 @@ export const Task = ({ task }) => {
     const navigate = useNavigate();
     const user = useTracker(() => Meteor.user());
     const handleButtonClick = () => {
-        if(user._id==task.userId){
-            navigate('/task/edit', {state:{task}});
+        if (user._id == task.userId) {
+            navigate('/task/edit', { state: { task } });
         }
     }
     const onDeleteClick = () => {
-        console.log(task)
-        if(user._id==task.userId){
+        if (user._id == task.userId) {
             Meteor.call('tasks.remove', task._id);
         }
     };
-    
-    return (<ListItem secondaryAction={<Box>
-        <IconButton onClick={()=>handleButtonClick()} edge="end" aria-label="edit" style={{ marginRight: '8px' }} disabled={!(user._id==task.userId)}>
-            <EditIcon />
-        </IconButton>
-        <IconButton onClick={()=> onDeleteClick(task)} edge="end" aria-label="delete" disabled={!(user._id==task.userId)}>
-            <DeleteIcon />
-        </IconButton>
-    </Box>
-    }>
-        <ListItemIcon>
-            <FolderIcon />
-        </ListItemIcon>
-        <ListItemText primary={task.text} secondary={task.name} />
-    </ListItem>)
+
+    return (
+        <ListItem secondaryAction={<Box>
+            <IconButton onClick={() => handleButtonClick()} edge="end" aria-label="edit" style={{ marginRight: '8px' }} disabled={!(user._id == task.userId)}>
+                <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => onDeleteClick(task)} edge="end" aria-label="delete" disabled={!(user._id == task.userId)}>
+                <DeleteIcon />
+            </IconButton>
+        </Box>
+        }>
+            <ListItemIcon>
+                <FolderIcon />
+            </ListItemIcon>
+            <ListItemText primary={task.text} secondary={task.name} />
+        </ListItem>)
 };

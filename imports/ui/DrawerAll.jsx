@@ -19,6 +19,7 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import ChecklistIcon from '@mui/icons-material/Checklist';
+import { Button } from '@mui/material';
 
 export const DrawerAll = () => {
     const [drawerOpen, setDrawerOpen] = useState(false);
@@ -56,9 +57,10 @@ export const DrawerAll = () => {
                     <Typography variant="h6" noWrap component="div">
                         Bem Vindo {user.username}
                     </Typography>
-                    <ListItem color="inherit" onClick={logout}>
+
+                    <Button color="inherit" onClick={logout}  style={{textAlign: 'right', justifyContent:"flex-end"}}>
                         <LogoutIcon />
-                    </ListItem>
+                    </Button>
                 </Toolbar>
             </AppBar>
             <Drawer open={drawerOpen} onClose={handleDrawerClose}>

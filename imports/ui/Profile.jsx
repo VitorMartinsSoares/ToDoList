@@ -19,6 +19,8 @@ import { DrawerAll } from './DrawerAll';
 import { PhotoCamera } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import { styled } from "@mui/system";
+import { Accounts } from 'meteor/accounts-base'
+
 
 const StyledLabel = styled('label')({
     display: 'block',
@@ -35,21 +37,21 @@ export const Profile = () => {
         Meteor.users.update(user._id, {
             $set: {
                 "username": username,
-                "email.0.address": email,
                 "profile.birthdate": yesterday.format(),
                 "profile.gender": 0,
                 "profile.company": "Default",
                 "profile.photo": "link"
             }
         });
+
     }
-    console.log(user);
     const [username, setUsername] = useState(user.username);
-    const [email, setEmail] = useState((typeof user.email === 'undefined') ? 'exemplo@email.com' : user.email);
+    const [email, setEmail] = useState((typeof user.profile.email === 'undefined') ? 'exemplo@email.com' : user.profile.email);
     const [birthDate, setBirthDate] = useState(dayjs(user.profile.birthdate));
     const [gender, setGender] = useState(user.profile.gender);
     const [company, setCompany] = useState(user.profile.company);
     const [photo, setPhoto] = useState(user.profile.photo);
+    console.log(user);
     if (gender == "Não Definido") {
         setGender(0);
     }
@@ -69,6 +71,7 @@ export const Profile = () => {
         e.preventDefault();
         Meteor.users.update(user._id, {
             $set: {
+                "profile.email": email,
                 "profile.birthdate": birthDate.format(),
                 "profile.gender": gender,
                 "profile.company": company,
@@ -132,7 +135,7 @@ export const Profile = () => {
                 <div>
                     <TextField
                         required
-                        disabled={editable}
+                        disabled={true}
                         id="outlined-required"
                         label="Nome do Usuário"
                         defaultValue={username}

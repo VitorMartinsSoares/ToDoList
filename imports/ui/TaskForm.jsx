@@ -9,7 +9,7 @@ export const TaskForm = () => {
 
   const handleSubmit = e => {
     e.preventDefault();
-
+    setText("");
     if (!text) return;
 
     Meteor.call('tasks.insert', text);
@@ -30,7 +30,7 @@ export const TaskForm = () => {
           required
           id="standard-required"
           label="Type to add new tasks"
-          defaultValue=""
+          value={text}
           variant="standard"
           type="text"
           placeholder="New Tasks"
