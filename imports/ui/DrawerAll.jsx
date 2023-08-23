@@ -20,8 +20,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 import HomeIcon from '@mui/icons-material/Home';
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import { Button } from '@mui/material';
+import { Avatar } from "@mui/material";
 
 export const DrawerAll = () => {
+
     const [drawerOpen, setDrawerOpen] = useState(false);
     const user = useTracker(() => Meteor.user());
     const logout = () => Meteor.logout();
@@ -58,13 +60,25 @@ export const DrawerAll = () => {
                         Bem Vindo {user.username}
                     </Typography>
 
-                    <Button color="inherit" onClick={logout}  style={{textAlign: 'right', justifyContent:"flex-end"}}>
+                    <Button color="inherit" onClick={logout} style={{ textAlign: 'right', justifyContent: "flex-end" }}>
                         <LogoutIcon />
                     </Button>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={handleDrawerClose}>
-                <Toolbar />
+            <Drawer open={drawerOpen} onClose={handleDrawerClose} 
+                            sx={{ width: 150, height: 150 }}>
+                <List>
+                    <ListItem>
+                        <h1>{user.username}</h1>
+                    </ListItem>
+                    <ListItem>
+                        <Avatar
+                            alt="Uploaded Preview"
+                            src={user.profile.photo}
+                            sx={{ width: 75, height: 75 }}
+                        />
+                    </ListItem>
+                </List>
                 <Divider />
                 <List>
                     <ListItem disablePadding onClick={() => toHome()}>

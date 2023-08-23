@@ -114,12 +114,13 @@ export const ShowTask = () => {
               <EditIcon />
             </IconButton>
             <Checkbox
+              disabled={editable}
               checked={pessoal}
               onChange={e => setPessoal(e.target.checked)}
               inputProps={{ 'aria-label': 'controlled' }}
             />
           </Box>
-          <Button type="submit" variant="contained" >Editar Tarefas</Button>
+          <Button type="submit" variant="contained" disabled={editable} >Editar Tarefas</Button>
         </Box>
       </Box>
     </Box>

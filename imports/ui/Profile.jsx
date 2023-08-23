@@ -43,7 +43,6 @@ export const Profile = () => {
                 "profile.photo": "link"
             }
         });
-
     }
     const [username, setUsername] = useState(user.username);
     const [email, setEmail] = useState((typeof user.profile.email === 'undefined') ? 'exemplo@email.com' : user.profile.email);
@@ -51,7 +50,6 @@ export const Profile = () => {
     const [gender, setGender] = useState(user.profile.gender);
     const [company, setCompany] = useState(user.profile.company);
     const [photo, setPhoto] = useState(user.profile.photo);
-    console.log(user);
     if (gender == "Não Definido") {
         setGender(0);
     }
@@ -106,6 +104,11 @@ export const Profile = () => {
                     '& .MuiTextField-root': { m: 1, width: '25ch' },
                 }}>
                 <Toolbar />
+
+                <IconButton edge="end" onClick={toggleEditable} aria-label="edit" style={{ marginRight: '8px', marginTop: '10px', alignItems:"flex-end" }} >
+                    Habilitar Edição:
+                    <EditIcon />
+                </IconButton>
                 <div >
                     <Avatar style={{ justifyContent: 'center' }}
                         alt="Uploaded Preview"
@@ -133,6 +136,7 @@ export const Profile = () => {
                     />
                 </StyledLabel>
                 <div>
+
                     <TextField
                         required
                         disabled={true}
@@ -153,8 +157,8 @@ export const Profile = () => {
                             defaultValue={birthDate}
                             label="Data de Nascimento"
                             disableFuture
-                            views={['day', 'month', 'year']}
-                            onChange={e => setBirthDate(e.target.value)}
+                            format="DD/MM/YYYY"
+                            onChange={e => setBirthDate(e)}
                         />
                     </LocalizationProvider>
                     <FormControl sx={{ m: 1, width: '25ch' }}>
@@ -178,13 +182,9 @@ export const Profile = () => {
                         label="Empresa"
                         defaultValue={company}
                         onChange={e => setCompany(e.target.value)} />
-                
-                <IconButton edge="end" onClick={toggleEditable} aria-label="edit" style={{ marginRight: '8px', marginTop: '10px'}}>
-                        <EditIcon />
-                    </IconButton>
                 </div>
                 <Button variant="contained"
-                    onClick={handleSubmit}>Editar Perfil</Button>
+                    onClick={handleSubmit} disabled={editable}>Editar Perfil</Button>
             </Box>
         </Box>
     );

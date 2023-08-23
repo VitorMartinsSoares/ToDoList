@@ -19,18 +19,20 @@ const Demo = styled('div')(({ theme }) => ({
 }));
 
 export const TaskList = () => {
-    const [itens,setItens] = useState(0);
-    const [count,setCount] = useState(1);
+    const [itens, setItens] = useState(0);
+    const [count, setCount] = useState(1);
     const [checked, setChecked] = useState(false);
     const [dense, setDense] = useState(false);
     const [word, setWord] = useState("");
+    const[total, setTotal] = useState(1);
+
     const { tasks } = useTracker(() => {
-        const subscription = Meteor.subscribe('privateTasks', checked, word,count-1,itens);
+        const subscription = Meteor.subscribe('privateTasks', checked, word);
         const tasks = TasksCollection.find().fetch();
         return { tasks }
     });
-    if(itens==0){
-        total = tasks.length;
+    if (itens == 0) {
+        setTotal(tasks.length);
         setItens(4);
     }
     const handleChange = (event) => {
@@ -78,7 +80,6 @@ export const TaskList = () => {
                         </React.Fragment>
                     </Demo>
                 </Grid>
-                <Pagination count={Math.ceil(total/itens)} page={count} onChange={pageChange}/>
             </Box>
         </Box>
     );
