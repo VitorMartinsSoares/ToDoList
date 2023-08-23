@@ -13,6 +13,8 @@ import FormLabel from '@mui/material/FormLabel';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import { DrawerAll } from './DrawerAll';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import Pagination from '@mui/material/Pagination';
 const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -24,7 +26,7 @@ export const TaskList = () => {
     const [checked, setChecked] = useState(false);
     const [dense, setDense] = useState(false);
     const [word, setWord] = useState("");
-    const[total, setTotal] = useState(1);
+    const [total, setTotal] = useState(1);
 
     const { tasks } = useTracker(() => {
         const subscription = Meteor.subscribe('privateTasks', checked, word);
@@ -43,14 +45,17 @@ export const TaskList = () => {
     };
     return (
         <Box sx={{ display: 'flex' }}>
-            <DrawerAll />
+            <DrawerAll page={"To Do List"} />
             <Box
                 component="main"
                 sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
             >
                 <Toolbar />
                 <TaskForm />
-                <Toolbar />
+                <Divider />
+                <Typography variant="h5" style={{ color: "gray", marginTop: "20px" }} >
+                    Visualizar Tarefas:
+                </Typography>
                 <TextField
                     required
                     id="standard-required"
@@ -79,7 +84,9 @@ export const TaskList = () => {
                             </List>
                         </React.Fragment>
                     </Demo>
+                    <Pagination count={10} page={0} onChange={handleChange} style={{alignItems: 'center'}}/>
                 </Grid>
+
             </Box>
         </Box>
     );

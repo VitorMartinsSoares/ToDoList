@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import dayjs from 'dayjs';
+import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import Toolbar from '@mui/material/Toolbar';
 import { useNavigate } from 'react-router-dom';
@@ -19,7 +20,7 @@ import { DrawerAll } from './DrawerAll';
 import { PhotoCamera } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
 import { styled } from "@mui/system";
-import { Accounts } from 'meteor/accounts-base'
+import Typography from '@mui/material/Typography';
 
 
 const StyledLabel = styled('label')({
@@ -91,101 +92,100 @@ export const Profile = () => {
     };
 
     return (
-        <Box sx={{ display: 'flex' }}
+        <Box
             noValidate
             autoComplete="off">
-            <DrawerAll />
-            <Box component="main"
-                sx={{
-                    display: 'flex',
-                    flexDirection: 'column',  // organiza os filhos na vertical
-                    alignItems: 'center',     // centraliza os filhos na horizontal
-                    height: '100vh',          // usa 100% da altura da viewport
-                    '& .MuiTextField-root': { m: 1, width: '25ch' },
-                }}>
-                <Toolbar />
+            <DrawerAll page={"Profile"} />
+            <Grid container justifyContent="center" >
+                <Grid item>
+                    <Box component="main"
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',  // organiza os filhos na vertical
+                            alignItems: 'center',     // centraliza os filhos na horizontal
+                            height: '100vh',          // usa 100% da altura da viewport
+                            '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        }}>
+                        <Toolbar />
 
-                <IconButton edge="end" onClick={toggleEditable} aria-label="edit" style={{ marginRight: '8px', marginTop: '10px', alignItems:"flex-end" }} >
-                    Habilitar Edição:
-                    <EditIcon />
-                </IconButton>
-                <div >
-                    <Avatar style={{ justifyContent: 'center' }}
-                        alt="Uploaded Preview"
-                        src={photo}
-                        sx={{ width: 100, height: 100 }}
+                        <Typography variant="h4" style={{ color: "gray" }}>
+                            Usuário: {username}
+                        </Typography>
+                        <IconButton edge="end" onClick={toggleEditable} aria-label="edit" style={{ marginRight: '8px', marginTop: '10px', alignItems: "flex-end" }} >
+                            <EditIcon />
+                            Habilitar Edição
+                        </IconButton>
+                        <div >
+                            <Avatar style={{ justifyContent: 'center' }}
+                                alt="Uploaded Preview"
+                                src={photo}
+                                sx={{ width: 100, height: 100 }}
 
-                    />
-                </div>
-                <StyledLabel>
-                    <Button
-                        disabled={editable}
-                        style={{ display: "flex", justifyContent: "left" }}
-                        startIcon={<PhotoCamera />}
-                        component="span"
-                        variant="contained"
-                    >
-                        Carregar Foto
-                    </Button>
-                    <input
-                        disabled={editable}
-                        type="file"
-                        accept="image/*"
-                        onChange={handleFileChange}
-                        style={{ display: "none" }}
-                    />
-                </StyledLabel>
-                <div>
+                            />
+                        </div>
+                        <StyledLabel>
+                            <Button
+                                disabled={editable}
+                                style={{ display: "flex" }}
+                                startIcon={<PhotoCamera />}
+                                component="span"
+                                variant="contained"
+                            >
+                                Carregar Foto
+                            </Button>
+                            <input
+                                disabled={editable}
+                                type="file"
+                                accept="image/*"
+                                onChange={handleFileChange}
+                                style={{ display: "none" }}
+                            />
+                        </StyledLabel>
 
-                    <TextField
-                        required
-                        disabled={true}
-                        id="outlined-required"
-                        label="Nome do Usuário"
-                        defaultValue={username}
-                        onChange={e => setUsername(e.target.value)} />
-                    <TextField
-                        required
-                        disabled={editable}
-                        id="outlined-required"
-                        label="Email do Usuário"
-                        defaultValue={email}
-                        onChange={e => setEmail(e.target.value)} />
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DatePicker
+                        <TextField
+                            required
                             disabled={editable}
-                            defaultValue={birthDate}
-                            label="Data de Nascimento"
-                            disableFuture
-                            format="DD/MM/YYYY"
-                            onChange={e => setBirthDate(e)}
-                        />
-                    </LocalizationProvider>
-                    <FormControl sx={{ m: 1, width: '25ch' }}>
-                        <InputLabel id="demo-simple-select-helper-label">Gênero</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-helper-label"
-                            id="demo-simple-select-helper"
-                            value={gender}
+                            id="outlined-required"
+                            label="Email do Usuário"
+                            defaultValue={email}
+                            onChange={e => setEmail(e.target.value)} />
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                disabled={editable}
+                                defaultValue={birthDate}
+                                label="Data de Nascimento"
+                                disableFuture
+                                format="DD/MM/YYYY"
+                                onChange={e => setBirthDate(e)}
+                            />
+                        </LocalizationProvider>
+                        <FormControl sx={{ m: 1, width: '25ch' }}>
+                            <InputLabel >Gênero</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-helper-label"
+                                id="demo-simple-select-helper"
+                                value={gender}
+                                disabled={editable}
+                                onChange={handleChange}
+                                label="Gênero">
+                                <MenuItem value={0}>Não Definido</MenuItem>
+                                <MenuItem value={1}>Masculino</MenuItem>
+                                <MenuItem value={2}>Feminino</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <TextField
+                            required
                             disabled={editable}
-                            onChange={handleChange}
-                            label="Gênero">
-                            <MenuItem value={0}>Não Definido</MenuItem>
-                            <MenuItem value={1}>Masculino</MenuItem>
-                            <MenuItem value={2}>Feminino</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <TextField
-                        required
-                        disabled={editable}
-                        id="outlined-required"
-                        label="Empresa"
-                        defaultValue={company}
-                        onChange={e => setCompany(e.target.value)} />
-                </div>
-                <Button variant="contained"
-                    onClick={handleSubmit} disabled={editable}>Editar Perfil</Button>
-            </Box>
+                            id="outlined-required"
+                            label="Empresa"
+                            defaultValue={company}
+                            onChange={e => setCompany(e.target.value)} />
+
+                        <Button variant="contained"
+                            onClick={handleSubmit} disabled={editable}>Editar Perfil</Button>
+                    </Box>
+                </Grid>
+            </Grid>
         </Box>
     );
 };

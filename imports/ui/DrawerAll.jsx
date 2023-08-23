@@ -5,6 +5,7 @@ import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
+import Grid from '@mui/material/Grid';
 import CssBaseline from '@mui/material/CssBaseline';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -22,8 +23,7 @@ import ChecklistIcon from '@mui/icons-material/Checklist';
 import { Button } from '@mui/material';
 import { Avatar } from "@mui/material";
 
-export const DrawerAll = () => {
-
+export const DrawerAll = ({ page }) => {
     const [drawerOpen, setDrawerOpen] = useState(false);
     const user = useTracker(() => Meteor.user());
     const logout = () => Meteor.logout();
@@ -46,39 +46,42 @@ export const DrawerAll = () => {
     };
     return (
         <Box sx={{ display: 'flex' }}>
-            <CssBaseline />
             <AppBar>
                 <Toolbar >
                     <IconButton
                         color="inherit"
-                        aria-label="open drawer"
                         onClick={handleDrawerOpen}
-                        edge="start">
+                    >
                         <MenuIcon />
                     </IconButton>
-                    <Typography variant="h6" noWrap component="div">
-                        Bem Vindo {user.username}
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} style={{ marginLeft: '20px' }}>
+                        {page}
                     </Typography>
-
-                    <Button color="inherit" onClick={logout} style={{ textAlign: 'right', justifyContent: "flex-end" }}>
+                    <Typography variant="h6">
+                        Logout:
+                    </Typography>
+                    <Button color="inherit" onClick={logout} >
                         <LogoutIcon />
                     </Button>
                 </Toolbar>
             </AppBar>
-            <Drawer open={drawerOpen} onClose={handleDrawerClose} 
-                            sx={{ width: 150, height: 150 }}>
-                <List>
-                    <ListItem>
-                        <h1>{user.username}</h1>
-                    </ListItem>
-                    <ListItem>
-                        <Avatar
-                            alt="Uploaded Preview"
-                            src={user.profile.photo}
-                            sx={{ width: 75, height: 75 }}
-                        />
-                    </ListItem>
-                </List>
+            <Drawer open={drawerOpen} onClose={handleDrawerClose}>
+                <Grid container justifyContent="center" >
+                    <Grid item>
+                        <List>
+                            <ListItem >
+                                <h1>{user.username}</h1>
+                            </ListItem>
+                            <ListItem>
+                                <Avatar
+                                    alt="Uploaded Preview"
+                                    src={user.profile.photo}
+                                    sx={{ width: 75, height: 75 }}
+                                />
+                            </ListItem>
+                        </List>
+                    </Grid>
+                </Grid>
                 <Divider />
                 <List>
                     <ListItem disablePadding onClick={() => toHome()}>

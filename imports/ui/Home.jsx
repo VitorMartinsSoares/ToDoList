@@ -24,7 +24,7 @@ export const Home = () => {
   const countTaskPrivateConcluded = taskPrivate.filter(taskPrivate=>taskPrivate.situation==2).length
   return (
     <Box sx={{ display: 'flex' }}>
-      <DrawerAll />
+      <DrawerAll page={"Home"}/>
       <Box
         component="main"
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
