@@ -3,6 +3,7 @@ import { Accounts } from 'meteor/accounts-base';
 import { TasksCollection } from '/imports/api/TasksCollection';
 import '/imports/api/tasksMethods';
 import dayjs from 'dayjs';
+
 const insertTask = (taskText, user) =>
   TasksCollection.insert({
     text: taskText,

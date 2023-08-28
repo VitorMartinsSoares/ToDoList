@@ -48,6 +48,7 @@ export const ShowTask = () => {
   };
 
   const handleSubmit = e => {
+    console.log("teste");
     e.preventDefault();
     Meteor.call('tasks.edit', task._id, nameTask, dataCreate.format(), situation, description, pessoal);
     navigate('/task');
@@ -132,7 +133,7 @@ export const ShowTask = () => {
                   inputProps={{ 'aria-label': 'controlled' }}
                 />
               </Typography>
-              <Button type="submit" variant="contained" disabled={editable} >Editar Tarefas</Button>
+              <Button onClick={handleSubmit} variant="contained" disabled={editable} >Editar Tarefas</Button>
             </Box>
           </Grid>
         </Grid>
